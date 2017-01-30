@@ -10,7 +10,7 @@ var isServer = function isServer() {
 var isClient = function isClient() {
   return !isServer;
 };
-var WINDOW = isClient ? window : null;
+var WINDOW = isClient() ? window : null;
 
 exports.default = {
   isServer: isServer,
