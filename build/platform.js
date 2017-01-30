@@ -8,7 +8,7 @@ var isServer = function isServer() {
   return typeof window === "undefined";
 };
 var isClient = function isClient() {
-  return !isServer;
+  return !isServer();
 };
 var WINDOW = isClient() ? window : null;
 
