@@ -69,7 +69,7 @@ var El = {};
 
 El.calcBounds = function (el) {
 
-  if (el === _platform.getWindow) {
+  if (el === (0, _platform.getWindow)()) {
     return {
       x: 0,
       y: 0,
@@ -93,11 +93,11 @@ El.calcBounds = function (el) {
 };
 
 El.calcSize = function (el) {
-  return el === _platform.getWindow ? { w: el.innerWidth, h: el.innerHeight } : { w: el.offsetWidth, h: el.offsetHeight };
+  return el === (0, _platform.getWindow)() ? { w: el.innerWidth, h: el.innerHeight } : { w: el.offsetWidth, h: el.offsetHeight };
 };
 
 El.calcScrollSize = function (el) {
-  return el === _platform.getWindow ? {
+  return el === (0, _platform.getWindow)() ? {
     w: el.scrollX || el.pageXOffset,
     h: el.scrollY || el.pageYOffset
   } : { w: el.scrollLeft, h: el.scrollTop };
