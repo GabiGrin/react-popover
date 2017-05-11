@@ -376,7 +376,7 @@ var Popover = (0, _react.createClass)({
     be a nice feature in the future to allow other frames to be used
     such as local elements that further constrain the popover`s world. */
 
-    this.frameEl = _platform.getWindow;
+    this.frameEl = (0, _platform.getWindow)();
     this.hasTracked = true;
 
     /* Set a general interval for checking if target position changed. There is no way
