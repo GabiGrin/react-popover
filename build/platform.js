@@ -12,8 +12,12 @@ var isClient = function isClient() {
   return !isServer();
 };
 
-var getWindow = isClient() ? window : null;
-var getDocument = isClient() ? document : null;
+var getWindow = function getWindow() {
+  return isClient() ? window : null;
+};
+var getDocument = function getDocument() {
+  return isClient() ? document : null;
+};
 
 exports.default = {
   isServer: isServer,
