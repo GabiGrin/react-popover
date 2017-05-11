@@ -1,16 +1,20 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = require('react');
+var _react = require("react");
 
-var _reactDom = require('react-dom');
+var _reactDom = require("react-dom");
 
-var _utils = require('./utils');
+var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _platform = require('./platform');
+var _utils = require("./utils");
+
+var _platform = require("./platform");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var createElement = function createElement(x) {
   return (0, _platform.isClient)() ? document.createElement(x) : _utils.noop;
@@ -29,7 +33,7 @@ var ReactLayerMixin = function ReactLayerMixin() {
     componentWillMount: function componentWillMount() {
       this.targetBounds = null;
       /* Create a DOM node for mounting the React Layer. */
-      this.layerContainerNode = createElement('div');
+      this.layerContainerNode = createElement("div");
     },
     componentDidMount: function componentDidMount() {
       /* Mount the mount. */
@@ -48,14 +52,14 @@ var ReactLayerMixin = function ReactLayerMixin() {
       var layerReactEl = this.renderLayer();
       if (!layerReactEl) {
         this.layerReactComponent = null;
-        (0, _reactDom.render)(_react.DOM.noscript(), this.layerContainerNode);
+        _reactDom2.default.unstable_renderSubtreeIntoContainer(this, _react.DOM.noscript(), this.layerContainerNode);
       } else {
-        this.layerReactComponent = (0, _reactDom.render)(layerReactEl, this.layerContainerNode);
+        this.layerReactComponent = _reactDom2.default.unstable_renderSubtreeIntoContainer(this, layerReactEl, this.layerContainerNode);
       }
     },
     _layerUnrender: function _layerUnrender() {
       if (this.layerWillUnmount) this.layerWillUnmount(this.layerContainerNode);
-      (0, _reactDom.unmountComponentAtNode)(this.layerContainerNode);
+      _reactDom2.default.unmountComponentAtNode(this.layerContainerNode);
     }
   };
 };

@@ -1,40 +1,40 @@
-'use strict';
+"use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _react = require('react');
+var _react = require("react");
 
-var _reactDom = require('react-dom');
+var _reactDom = require("react-dom");
 
-var _debug = require('debug');
+var _debug = require("debug");
 
 var _debug2 = _interopRequireDefault(_debug);
 
-var _lodash = require('lodash.throttle');
+var _lodash = require("lodash.throttle");
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _cssVendor = require('css-vendor');
+var _cssVendor = require("css-vendor");
 
 var cssVendor = _interopRequireWildcard(_cssVendor);
 
-var _onResize = require('./on-resize');
+var _onResize = require("./on-resize");
 
 var _onResize2 = _interopRequireDefault(_onResize);
 
-var _layout = require('./layout');
+var _layout = require("./layout");
 
 var _layout2 = _interopRequireDefault(_layout);
 
-var _reactLayerMixin = require('./react-layer-mixin');
+var _reactLayerMixin = require("./react-layer-mixin");
 
 var _reactLayerMixin2 = _interopRequireDefault(_reactLayerMixin);
 
-var _platform = require('./platform');
+var _platform = require("./platform");
 
-var _utils = require('./utils');
+var _utils = require("./utils");
 
-var _tip = require('./tip');
+var _tip = require("./tip");
 
 var _tip2 = _interopRequireDefault(_tip);
 
@@ -44,16 +44,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var log = (0, _debug2.default)('react-popover');
+var log = (0, _debug2.default)("react-popover");
 
 var supportedCSSValue = (0, _utils.clientOnly)(cssVendor.supportedValue);
 
 var jsprefix = function jsprefix(x) {
-  return '' + cssVendor.prefix.js + x;
+  return "" + cssVendor.prefix.js + x;
 };
 
 var cssprefix = function cssprefix(x) {
-  return '' + cssVendor.prefix.css + x;
+  return "" + cssVendor.prefix.css + x;
 };
 
 var cssvalue = function cssvalue(prop, value) {
@@ -61,46 +61,46 @@ var cssvalue = function cssvalue(prop, value) {
 };
 
 var coreStyle = {
-  position: 'absolute',
+  position: "absolute",
   top: 0,
   left: 0,
-  display: cssvalue('display', 'flex')
+  display: cssvalue("display", "flex")
 };
 
 var faces = {
-  above: 'down',
-  right: 'left',
-  below: 'up',
-  left: 'right'
+  above: "down",
+  right: "left",
+  below: "up",
+  left: "right"
 };
 
 /* Flow mappings. Each map maps the flow domain to another domain. */
 
 var flowToTipTranslations = {
-  row: 'translateY',
-  column: 'translateX'
+  row: "translateY",
+  column: "translateX"
 };
 
 var flowToPopoverTranslations = {
-  row: 'translateX',
-  column: 'translateY'
+  row: "translateX",
+  column: "translateY"
 };
 
 var Popover = (0, _react.createClass)({
-  displayName: 'popover',
+  displayName: "popover",
   propTypes: {
     body: _react.PropTypes.node.isRequired,
     children: _react.PropTypes.element.isRequired,
-    preferPlace: _react.PropTypes.oneOf(_layout2.default.validTypeValues),
-    place: _react.PropTypes.oneOf(_layout2.default.validTypeValues),
-    tipSize: _react.PropTypes.number,
-    offset: _react.PropTypes.number,
-    refreshIntervalMs: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.bool]),
-    isOpen: _react.PropTypes.bool,
-    onOuterAction: _react.PropTypes.func,
-    enterExitTransitionDurationMs: _react.PropTypes.number,
     className: _react.PropTypes.string,
-    style: _react.PropTypes.object
+    enterExitTransitionDurationMs: _react.PropTypes.number,
+    isOpen: _react.PropTypes.bool,
+    offset: _react.PropTypes.number,
+    place: _react.PropTypes.oneOf(_layout2.default.validTypeValues),
+    preferPlace: _react.PropTypes.oneOf(_layout2.default.validTypeValues),
+    refreshIntervalMs: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.bool]),
+    style: _react.PropTypes.object,
+    tipSize: _react.PropTypes.number,
+    onOuterAction: _react.PropTypes.func
   },
   mixins: [(0, _reactLayerMixin2.default)()],
   getDefaultProps: function getDefaultProps() {
@@ -118,10 +118,10 @@ var Popover = (0, _react.createClass)({
   },
   getInitialState: function getInitialState() {
     return {
-      standing: 'above',
+      standing: "above",
       exited: !this.props.isOpen, // for animation-dependent rendering, should popover close/open?
       exiting: false, // for tracking in-progress animations
-      toggle: false };
+      toggle: this.props.isOpen || false };
   },
   componentDidMount: function componentDidMount() {
     this.targetEl = (0, _reactDom.findDOMNode)(this);
@@ -170,20 +170,20 @@ var Popover = (0, _react.createClass)({
     way at any time for any arbitrary trigger. There may be value in investigating the
     http://overconstrained.io community for its general layout system via the
     constraint-solver Cassowary. */
-    if (this.zone) this.size[this.zone.flow === 'row' ? 'h' : 'w'] += this.props.tipSize;
+    if (this.zone) this.size[this.zone.flow === "row" ? "h" : "w"] += this.props.tipSize;
     var zone = _layout2.default.pickZone(pickerSettings, this.frameBounds, this.targetBounds, this.size);
-    if (this.zone) this.size[this.zone.flow === 'row' ? 'h' : 'w'] -= this.props.tipSize;
+    if (this.zone) this.size[this.zone.flow === "row" ? "h" : "w"] -= this.props.tipSize;
 
     var tb = this.targetBounds;
     this.zone = zone;
-    log('zone', zone);
+    log("zone", zone);
 
     this.setState({
       standing: zone.standing
     });
 
     var axis = _layout2.default.axes[zone.flow];
-    log('axes', axis);
+    log("axes", axis);
 
     var dockingEdgeBufferLength = Math.round(getComputedStyle(this.bodyEl).borderRadius.slice(0, -2)) || 0;
     var scrollSize = _layout2.default.El.calcScrollSize(this.frameEl);
@@ -215,25 +215,31 @@ var Popover = (0, _react.createClass)({
     /* If the popover dose not fit into frameCrossLength then just position it to the `frameCrossStart`.
     popoverCrossLength` will now be forced to overflow into the `Frame` */
     if (pos.crossLength > frameCrossLength) {
-      log('popoverCrossLength does not fit frame.');
+      log("popoverCrossLength does not fit frame.");
       pos[axis.cross.start] = 0;
 
       /* If the `popoverCrossStart` is forced beyond some threshold of `targetCrossLength` then bound
       it (`popoverCrossStart`). */
     } else if (tb[axis.cross.end] < hangingBufferLength) {
-      log('popoverCrossStart cannot hang any further without losing target.');
+      log("popoverCrossStart cannot hang any further without losing target.");
       pos[axis.cross.start] = tb[axis.cross.end] - hangingBufferLength;
+
+      /* checking if the cross start of the target area is within the frame and it makes sense
+      to try fitting popover into the frame. */
+    } else if (tb[axis.cross.start] > frameCrossInnerEnd) {
+      log("popoverCrossStart cannot hang any further without losing target.");
+      pos[axis.cross.start] = tb[axis.cross.start] - this.size[axis.cross.size];
 
       /* If the `popoverCrossStart` does not fit within the inner frame (honouring buffers) then
       just center the popover in the remaining `frameCrossLength`. */
     } else if (pos.crossLength > frameCrossInnerLength) {
-      log('popoverCrossLength does not fit within buffered frame.');
+      log("popoverCrossLength does not fit within buffered frame.");
       pos[axis.cross.start] = (frameCrossLength - pos.crossLength) / 2;
     } else if (popoverCrossStart < frameCrossInnerStart) {
-      log('popoverCrossStart cannot reverse without exceeding frame.');
+      log("popoverCrossStart cannot reverse without exceeding frame.");
       pos[axis.cross.start] = frameCrossInnerStart;
     } else if (popoverCrossEnd > frameCrossInnerEnd) {
-      log('popoverCrossEnd cannot travel without exceeding frame.');
+      log("popoverCrossEnd cannot travel without exceeding frame.");
       pos[axis.cross.start] = pos[axis.cross.start] - (pos[axis.cross.end] - frameCrossInnerEnd);
     }
 
@@ -249,15 +255,15 @@ var Popover = (0, _react.createClass)({
     recalculate layout. */
 
     this.containerEl.style.flexFlow = zone.flow;
-    this.containerEl.style[jsprefix('FlexFlow')] = this.containerEl.style.flexFlow;
+    this.containerEl.style[jsprefix("FlexFlow")] = this.containerEl.style.flexFlow;
     this.bodyEl.style.order = zone.order;
-    this.bodyEl.style[jsprefix('Order')] = this.bodyEl.style.order;
+    this.bodyEl.style[jsprefix("Order")] = this.bodyEl.style.order;
 
     /* Apply Absolute Positioning. */
 
-    log('pos', pos);
-    this.containerEl.style.top = pos.y + 'px';
-    this.containerEl.style.left = pos.x + 'px';
+    log("pos", pos);
+    this.containerEl.style.top = pos.y + "px";
+    this.containerEl.style.left = pos.x + "px";
 
     /* Calculate Tip Position */
 
@@ -265,7 +271,7 @@ var Popover = (0, _react.createClass)({
     /* Get the absolute tipCrossCenter. Tip is positioned relative to containerEl
     but it aims at targetCenter which is positioned relative to frameEl... we
     need to cancel the containerEl positioning so as to hit our intended position. */
-    _layout2.default.centerOfBoundsFromBounds(zone.flow, 'cross', tb, pos)
+    _layout2.default.centerOfBoundsFromBounds(zone.flow, "cross", tb, pos)
 
     /* centerOfBounds does not account for scroll so we need to manually add that
     here. */
@@ -279,8 +285,8 @@ var Popover = (0, _react.createClass)({
       tipCrossPos = pos.crossLength - dockingEdgeBufferLength - this.props.tipSize * 2;
     }
 
-    this.tipEl.style.transform = flowToTipTranslations[zone.flow] + '(' + tipCrossPos + 'px)';
-    this.tipEl.style[jsprefix('Transform')] = this.tipEl.style.transform;
+    this.tipEl.style.transform = flowToTipTranslations[zone.flow] + "(" + tipCrossPos + "px)";
+    this.tipEl.style[jsprefix("Transform")] = this.tipEl.style.transform;
   },
   checkTargetReposition: function checkTargetReposition() {
     if (this.measureTargetBounds()) this.resolvePopoverLayout();
@@ -307,12 +313,12 @@ var Popover = (0, _react.createClass)({
   },
   enter: function enter() {
     if ((0, _platform.isServer)()) return;
-    log('enter!');
+    log("enter!");
     this.trackPopover();
     this.animateEnter();
   },
   exit: function exit() {
-    log('exit!');
+    log("exit!");
     this.animateExit();
     this.untrackPopover();
   },
@@ -327,8 +333,8 @@ var Popover = (0, _react.createClass)({
     this.setState({ exiting: true });
     this.exitingAnimationTimer2 = setTimeout(function () {
       setTimeout(function () {
-        _this.containerEl.style.transform = flowToPopoverTranslations[_this.zone.flow] + '(' + _this.zone.order * 50 + 'px)';
-        _this.containerEl.style.opacity = '0';
+        _this.containerEl.style.transform = flowToPopoverTranslations[_this.zone.flow] + "(" + _this.zone.order * 50 + "px)";
+        _this.containerEl.style.opacity = "0";
       }, 0);
     }, 0);
 
@@ -339,22 +345,22 @@ var Popover = (0, _react.createClass)({
   animateEnter: function animateEnter() {
     /* Prepare `entering` style so that we can then animate it toward `entered`. */
 
-    this.containerEl.style.transform = flowToPopoverTranslations[this.zone.flow] + '(' + this.zone.order * 50 + 'px)';
-    this.containerEl.style[jsprefix('Transform')] = this.containerEl.style.transform;
-    this.containerEl.style.opacity = '0';
+    this.containerEl.style.transform = flowToPopoverTranslations[this.zone.flow] + "(" + this.zone.order * 50 + "px)";
+    this.containerEl.style[jsprefix("Transform")] = this.containerEl.style.transform;
+    this.containerEl.style.opacity = "0";
 
     /* After initial layout apply transition animations. */
     /* Hack: http://stackoverflow.com/questions/3485365/how-can-i-force-webkit-to-redraw-repaint-to-propagate-style-changes */
     this.containerEl.offsetHeight;
 
-    this.tipEl.style.transition = 'transform 150ms ease-in';
-    this.tipEl.style[jsprefix('Transition')] = cssprefix('transform') + ' 150ms ease-in';
-    this.containerEl.style.transitionProperty = 'top, left, opacity, transform';
-    this.containerEl.style.transitionDuration = '500ms';
-    this.containerEl.style.transitionTimingFunction = 'cubic-bezier(0.230, 1.000, 0.320, 1.000)';
-    this.containerEl.style.opacity = '1';
-    this.containerEl.style.transform = 'translateY(0)';
-    this.containerEl.style[jsprefix('Transform')] = this.containerEl.style.transform;
+    this.tipEl.style.transition = "transform 150ms ease-in";
+    this.tipEl.style[jsprefix("Transition")] = cssprefix("transform") + " 150ms ease-in";
+    this.containerEl.style.transitionProperty = "top, left, opacity, transform";
+    this.containerEl.style.transitionDuration = "500ms";
+    this.containerEl.style.transitionTimingFunction = "cubic-bezier(0.230, 1.000, 0.320, 1.000)";
+    this.containerEl.style.opacity = "1";
+    this.containerEl.style.transform = "translateY(0)";
+    this.containerEl.style[jsprefix("Transform")] = this.containerEl.style.transform;
   },
   trackPopover: function trackPopover() {
     var minScrollRefreshIntervalMs = 200;
@@ -363,14 +369,14 @@ var Popover = (0, _react.createClass)({
     /* Get references to DOM elements. */
 
     this.containerEl = (0, _reactDom.findDOMNode)(this.layerReactComponent);
-    this.bodyEl = this.containerEl.querySelector('.Popover-body');
-    this.tipEl = this.containerEl.querySelector('.Popover-tip');
+    this.bodyEl = this.containerEl.querySelector(".Popover-body");
+    this.tipEl = this.containerEl.querySelector(".Popover-tip");
 
-    /* Note: frame is hardcoded to window now but we think it will
+    /* Note: frame is hardcoded to getWindow now but we think it will
     be a nice feature in the future to allow other frames to be used
     such as local elements that further constrain the popover`s world. */
 
-    this.frameEl = _platform.window;
+    this.frameEl = _platform.getWindow;
     this.hasTracked = true;
 
     /* Set a general interval for checking if target position changed. There is no way
@@ -390,7 +396,7 @@ var Popover = (0, _react.createClass)({
     this.onPopoverResize = (0, _lodash2.default)(this.onPopoverResize, minResizeRefreshIntervalMs);
     this.onTargetResize = (0, _lodash2.default)(this.onTargetResize, minResizeRefreshIntervalMs);
 
-    this.frameEl.addEventListener('scroll', this.onFrameScroll);
+    this.frameEl.addEventListener("scroll", this.onFrameScroll);
     _onResize2.default.on(this.frameEl, this.onFrameResize);
     _onResize2.default.on(this.containerEl, this.onPopoverResize);
     _onResize2.default.on(this.targetEl, this.onTargetResize);
@@ -398,8 +404,8 @@ var Popover = (0, _react.createClass)({
     /* Track user actions on the page. Anything that occurs _outside_ the Popover boundaries
     should close the Popover. */
 
-    _platform.window.addEventListener('mousedown', this.checkForOuterAction);
-    _platform.window.addEventListener('touchstart', this.checkForOuterAction);
+    _platform.getDocument.addEventListener("mousedown", this.checkForOuterAction);
+    _platform.getDocument.addEventListener("touchstart", this.checkForOuterAction);
 
     /* Kickstart layout at first boot. */
 
@@ -414,30 +420,30 @@ var Popover = (0, _react.createClass)({
   },
   untrackPopover: function untrackPopover() {
     clearInterval(this.checkLayoutInterval);
-    this.frameEl.removeEventListener('scroll', this.onFrameScroll);
+    this.frameEl.removeEventListener("scroll", this.onFrameScroll);
     _onResize2.default.off(this.frameEl, this.onFrameResize);
     _onResize2.default.off(this.containerEl, this.onPopoverResize);
     _onResize2.default.off(this.targetEl, this.onTargetResize);
-    _platform.window.removeEventListener('mousedown', this.checkForOuterAction);
-    _platform.window.removeEventListener('touchstart', this.checkForOuterAction);
+    _platform.getDocument.removeEventListener("mousedown", this.checkForOuterAction);
+    _platform.getDocument.removeEventListener("touchstart", this.checkForOuterAction);
   },
   onTargetResize: function onTargetResize() {
-    log('Recalculating layout because _target_ resized!');
+    log("Recalculating layout because _target_ resized!");
     this.measureTargetBounds();
     this.resolvePopoverLayout();
   },
   onPopoverResize: function onPopoverResize() {
-    log('Recalculating layout because _popover_ resized!');
+    log("Recalculating layout because _popover_ resized!");
     this.measurePopoverSize();
     this.resolvePopoverLayout();
   },
   onFrameScroll: function onFrameScroll() {
-    log('Recalculating layout because _frame_ scrolled!');
+    log("Recalculating layout because _frame_ scrolled!");
     this.measureTargetBounds();
     this.resolvePopoverLayout();
   },
   onFrameResize: function onFrameResize() {
-    log('Recalculating layout because _frame_ resized!');
+    log("Recalculating layout because _frame_ resized!");
     this.measureFrameBounds();
     this.resolvePopoverLayout();
   },
@@ -449,13 +455,13 @@ var Popover = (0, _react.createClass)({
 
     var _props = this.props,
         _props$className = _props.className,
-        className = _props$className === undefined ? '' : _props$className,
+        className = _props$className === undefined ? "" : _props$className,
         _props$style = _props.style,
         style = _props$style === undefined ? {} : _props$style;
 
 
     var popoverProps = {
-      className: 'Popover ' + className,
+      className: "Popover " + className,
       style: _extends({}, coreStyle, style)
     };
 
@@ -471,7 +477,7 @@ var Popover = (0, _react.createClass)({
 
     var popoverBody = (0, _utils.arrayify)(this.props.body);
 
-    return _react.DOM.div(popoverProps, _react.DOM.div.apply(_react.DOM, [{ className: 'Popover-body' }].concat(_toConsumableArray(popoverBody))), (0, _react.createElement)(_tip2.default, tipProps));
+    return _react.DOM.div(popoverProps, _react.DOM.div.apply(_react.DOM, [{ className: "Popover-body" }].concat(_toConsumableArray(popoverBody))), (0, _react.createElement)(_tip2.default, tipProps));
   },
   render: function render() {
     return this.props.children;

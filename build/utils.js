@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.clientOnly = exports.noop = exports.equalRecords = exports.find = exports.arrayify = undefined;
 
-var _platform = require('./platform');
+var _platform = require("./platform");
 
 var arrayify = function arrayify(x) {
   return Array.isArray(x) ? x : [x];

@@ -4,19 +4,24 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+
 var isServer = function isServer() {
   return typeof window === "undefined";
 };
 var isClient = function isClient() {
   return !isServer();
 };
-var WINDOW = isClient() ? window : null;
+
+var getWindow = isClient() ? window : null;
+var getDocument = isClient() ? document : null;
 
 exports.default = {
   isServer: isServer,
   isClient: isClient,
-  window: WINDOW
+  getWindow: getWindow,
+  getDocument: getDocument
 };
 exports.isServer = isServer;
 exports.isClient = isClient;
-exports.window = WINDOW;
+exports.getWindow = getWindow;
+exports.getDocument = getDocument;
