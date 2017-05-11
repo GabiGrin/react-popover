@@ -404,8 +404,8 @@ var Popover = (0, _react.createClass)({
     /* Track user actions on the page. Anything that occurs _outside_ the Popover boundaries
     should close the Popover. */
 
-    _platform.getDocument.addEventListener("mousedown", this.checkForOuterAction);
-    _platform.getDocument.addEventListener("touchstart", this.checkForOuterAction);
+    (0, _platform.getDocument)().addEventListener("mousedown", this.checkForOuterAction);
+    (0, _platform.getDocument)().addEventListener("touchstart", this.checkForOuterAction);
 
     /* Kickstart layout at first boot. */
 
@@ -424,8 +424,8 @@ var Popover = (0, _react.createClass)({
     _onResize2.default.off(this.frameEl, this.onFrameResize);
     _onResize2.default.off(this.containerEl, this.onPopoverResize);
     _onResize2.default.off(this.targetEl, this.onTargetResize);
-    _platform.getDocument.removeEventListener("mousedown", this.checkForOuterAction);
-    _platform.getDocument.removeEventListener("touchstart", this.checkForOuterAction);
+    (0, _platform.getDocument)().removeEventListener("mousedown", this.checkForOuterAction);
+    (0, _platform.getDocument)().removeEventListener("touchstart", this.checkForOuterAction);
   },
   onTargetResize: function onTargetResize() {
     log("Recalculating layout because _target_ resized!");
